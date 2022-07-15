@@ -12,7 +12,7 @@ Express + TypeScript + ESLint + Prettier
 
 - Start in Development Mode: `npm run dev`
 - ESLint Fix: `npm run lint-f`
-- Prettier Fix: `npm run prettier-f`
+- Prettier Fix: `npm run pretty-f`
 - See more commands in `package.json` > `scripts`
 
 ## Dependencies
