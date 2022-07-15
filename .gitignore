@@ -1,4 +1,4 @@
 node_modules
 dist
 logs
-src/utils/config.ts
+# src/utils/config.ts
