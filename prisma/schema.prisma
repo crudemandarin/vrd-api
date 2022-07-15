@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model futures {
+  MARKET              String?   @db.VarChar(32)
+  PRODUCT_SYMBOL      String?   @map("PRODUCT SYMBOL") @db.VarChar(8)
+  CONTRACT_MONTH      String?   @map("CONTRACT MONTH") @db.VarChar(2)
+  CONTRACT_YEAR       String?   @map("CONTRACT YEAR") @db.VarChar(4)
+  CONTRACT_DAY        String?   @map("CONTRACT DAY") @db.VarChar(2)
+  CONTRACT            String?   @db.VarChar(64)
+  PRODUCT_DESCRIPTION String?   @map("PRODUCT DESCRIPTION") @db.VarChar(128)
+  OPEN                Float?
+  HIGH                Float?
+  HIGH_AB_INDICATOR   String?   @map("HIGH AB INDICATOR") @db.VarChar(1)
+  LOW                 Float?
+  LOW_AB_INDICATOR    String?   @map("LOW AB INDICATOR") @db.VarChar(1)
+  LAST                Float?
+  LAST_AB_INDICATOR   String?   @map("LAST AB INDICATOR") @db.VarChar(1)
+  SETTLE              Float?
+  PT_CHG              String?   @map("PT CHG") @db.VarChar(16)
+  EST__VOL            Float?    @map("EST. VOL")
+  PRIOR_SETTLE        Float?    @map("PRIOR SETTLE")
+  PRIOR_VOL           Float?    @map("PRIOR VOL")
+  PRIOR_INT           Float?    @map("PRIOR INT")
+  TRADEDATE           DateTime? @db.Date
+
+  @@ignore
+}
+
+model trade {
+  id                 String    @id(map: "PK__trade__3213E83F07D50503") @db.VarChar(36)
+  date               DateTime  @db.Date
+  type               String    @db.VarChar(16)
+  market             String    @db.VarChar(16)
+  commodity          String    @db.VarChar(16)
+  contractName       String    @db.VarChar(16)
+  settlementType     String    @db.VarChar(16)
+  settlementMarket   String    @db.VarChar(16)
+  traderName         String    @db.VarChar(32)
+  counterParty       String?   @db.VarChar(16)
+  otherCounterParty  String?   @db.VarChar(16)
+  settlementPoint    String    @db.VarChar(16)
+  settlementLocation String    @db.VarChar(16)
+  book               String?   @db.VarChar(32)
+  transaction        String    @db.VarChar(16)
+  deliveryStart      DateTime? @db.Date
+  deliveryEnd        DateTime? @db.Date
+  expiration         DateTime? @db.Date
+  volume             Float
+  price              Float
+  fee                Float
+  strike             Float
+}

@@ -1,4 +1,4 @@
-# Express TS Template
+# Virtual Risk Desk API
 
 Express + TypeScript + ESLint + Prettier
 
