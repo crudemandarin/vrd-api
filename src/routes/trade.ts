@@ -60,7 +60,7 @@ router.post("/", body("trade").exists(), async (req, res) => {
 
 router.put(
 	"/",
-	query("id").isString().isLength({ min: 36, max: 36 }),
+	body("id").isString().isLength({ min: 36, max: 36 }),
 	body("updates").exists(),
 	async (req, res) => {
 		const errors = validationResult(req);

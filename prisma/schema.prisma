@@ -35,7 +35,7 @@ model futures {
 }
 
 model trade {
-  id                 String    @id(map: "PK__trade__3213E83F07D50503") @db.VarChar(36)
+  id                 String    @id(map: "PK__trade__3213E83F98F3A0C9") @db.VarChar(36)
   date               DateTime  @db.Date
   type               String    @db.VarChar(16)
   market             String    @db.VarChar(16)
