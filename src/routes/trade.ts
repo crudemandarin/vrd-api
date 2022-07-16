@@ -1,36 +1,59 @@
 import { Router } from "express";
+import { body, query, validationResult } from "express-validator";
 
 import TradeService from "../services/TradeService";
 import logger from "../utils/logger/logger";
+import PrismaUtil from "../utils/PrismaUtil";
 
 const router = Router();
 
-/* GET /trade */
+/* GET /trade?id= */
 
-router.get("/", async (_, res) => {
-	try {
-		const trades = await TradeService.getTrades();
-		return res.status(200).json({ trades });
-	} catch (err) {
-		logger.error("TradeService.getTrades failed. Error:");
-		logger.error(err);
+router.get(
+	"/",
+	query("id").isString().isLength({ min: 36, max: 36 }),
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+
+		const { id } = req.query;
+
+		try {
+			const trade = await TradeService.getTrade(id);
+
+			if (!trade) {
+				return res.status(404).json({ message: "Trade does not exist." });
+			}
+
+			return res.status(200).json({ trade });
+		} catch (err) {
+			const error = PrismaUtil.handleError(err);
+			logger.error(`TradeService.createTrade failed. Error = ${error.message}`);
+			return res.status(error.code).json({ message: error.message });
+		}
 	}
-
-	res.status(500).json({ message: "Internal Server Error" });
-});
+);
 
 /* POST /trade */
 
-router.post("/", async (req, res) => {
-	try {
-		const result = await TradeService.createTrade();
-		return res.status(200).json({ result });
-	} catch (err) {
-		logger.error("TradeService.createTrade failed");
-		logger.error(err);
+router.post("/", body("trade").exists(), async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() });
 	}
 
-	res.status(500).json({ message: "Internal Server Error" });
+	const { trade } = req.body;
+
+	try {
+		const result = await TradeService.createTrade(trade);
+		return res.status(200).json({ result });
+	} catch (err) {
+		const error = PrismaUtil.handleError(err);
+		logger.error(`TradeService.createTrade failed. Error = ${error.message}`);
+		return res.status(error.code).json({ message: error.message });
+	}
 });
 
 /* PUT /trade */
