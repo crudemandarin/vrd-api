@@ -3,6 +3,7 @@ import { Router } from "express";
 import TradeService from "../services/TradeService";
 import PrismaUtil from "../utils/PrismaUtil";
 import logger from "../utils/logger/logger";
+import { body, validationResult } from "express-validator";
 
 const router = Router();
 
@@ -18,5 +19,30 @@ router.get("/", async (_, res) => {
 		return res.status(error.code).json({ message: error.message });
 	}
 });
+
+/* POST /trades */
+
+router.post(
+	"/",
+	body("trades").isArray().isLength({ min: 1 }),
+	body("trades.*").isObject(),
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+
+		const { trades } = req.body;
+
+		try {
+			const result = await TradeService.createTrades(trades);
+			return res.status(200).json({ result });
+		} catch (err) {
+			const error = PrismaUtil.handleError(err);
+			logger.error(`TradeService.createTrade failed. Error = ${error.message}`);
+			return res.status(error.code).json({ message: error.message });
+		}
+	}
+);
 
 export default router;
