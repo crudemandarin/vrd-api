@@ -6,7 +6,6 @@ import PrismaUtil from "../utils/PrismaUtil";
 import AuthUtil from "../utils/AuthUtil";
 import logger from "../utils/logger/logger";
 
-
 const router = Router();
 
 /* GET /trades */

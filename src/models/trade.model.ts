@@ -53,4 +53,3 @@ export interface UpdateTradeModel {
 	fee?: number;
 	strike?: number;
 }
-

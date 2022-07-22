@@ -12,7 +12,8 @@ const router = Router();
 
 /* POST /auth/login */
 
-router.post("/login",
+router.post(
+	"/login",
 	body("email").isEmail().isLength({ max: EMAIL_MAX }),
 	body("password").isString().isLength(PASSWORD_LENGTH),
 	async (req, res) => {
@@ -32,12 +33,13 @@ router.post("/login",
 			logger.error(`AuthService.createUser failed. Error = ${error.message}`);
 			return res.status(error.code).json({ message: error.message });
 		}
-	});
-
+	}
+);
 
 /* POST /auth/create */
 
-router.post("/create",
+router.post(
+	"/create",
 	AuthUtil.authenticateToken,
 	body("email").isEmail().isLength({ max: EMAIL_MAX }),
 	body("password").isString().isLength(PASSWORD_LENGTH),
@@ -53,13 +55,20 @@ router.post("/create",
 		const { email, password, role, first_name, last_name } = req.body;
 
 		try {
-			const result = await AuthService.createUser(email, password, role, first_name, last_name);
+			const result = await AuthService.createUser(
+				email,
+				password,
+				role,
+				first_name,
+				last_name
+			);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);
 			logger.error(`AuthService.createUser failed. Error = ${error.message}`);
 			return res.status(error.code).json({ message: error.message });
 		}
-	});
+	}
+);
 
 export default router;

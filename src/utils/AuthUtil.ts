@@ -7,17 +7,23 @@ import { TokenPayloadModel } from "../models/auth.model";
 import AuthService from "../services/AuthService";
 
 class AuthUtil {
-
-	static generateAccessToken(payload: TokenPayloadModel, secret: string): string {
+	static generateAccessToken(
+		payload: TokenPayloadModel,
+		secret: string
+	): string {
 		const options = {
 			expiresIn: TOKEN_EXPIRATION, // 5 minutes
-			issuer: "vrd-api"
+			issuer: "vrd-api",
 		};
 		const token = sign(payload, secret, options);
 		return token;
 	}
 
-	static async authenticateToken(req: Request, res: Response, next: NextFunction) {
+	static async authenticateToken(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
 		const { authorization } = req.headers;
 		if (!authorization) res.sendStatus(401);
 		const token = authorization.split(" ")[1];
@@ -33,10 +39,9 @@ class AuthUtil {
 			logger.info(`Token verification failed. Error = ${JSON.stringify(err)}`);
 			return res.sendStatus(401);
 		}
-    
+
 		next();
 	}
-
 }
 
 export default AuthUtil;

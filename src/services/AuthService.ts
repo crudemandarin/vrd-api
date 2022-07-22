@@ -22,14 +22,21 @@ class AuthService {
 		return token;
 	}
 
-	static async createUser(email: string, password: string, role: string, first_name: string, last_name: string) {
+	static async createUser(
+		email: string,
+		password: string,
+		role: string,
+		first_name: string,
+		last_name: string
+	) {
 		const user_id = Util.generateId();
 		const password_hash = await hash(password, SALT_ROUNDS);
 		const prisma = new PrismaClient();
-		const result = prisma.user.create({ data: { user_id, email, password_hash, role, first_name, last_name } });
+		const result = prisma.user.create({
+			data: { user_id, email, password_hash, role, first_name, last_name },
+		});
 		return result;
 	}
-	
 }
 
 export default AuthService;

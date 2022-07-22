@@ -6,7 +6,6 @@ import PrismaUtil from "../utils/PrismaUtil";
 import AuthUtil from "../utils/AuthUtil";
 import logger from "../utils/logger/logger";
 
-
 const router = Router();
 
 /* GET /trade?id= */
@@ -41,23 +40,28 @@ router.get(
 
 /* POST /trade */
 
-router.post("/", AuthUtil.authenticateToken, body("trade").exists(), async (req, res) => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
-	}
+router.post(
+	"/",
+	AuthUtil.authenticateToken,
+	body("trade").exists(),
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
 
-	const { trade } = req.body;
+		const { trade } = req.body;
 
-	try {
-		const result = await TradeService.createTrade(trade);
-		return res.status(200).json({ result });
-	} catch (err) {
-		const error = PrismaUtil.handleError(err);
-		logger.error(`TradeService.createTrade failed. Error = ${error.message}`);
-		return res.status(error.code).json({ message: error.message });
+		try {
+			const result = await TradeService.createTrade(trade);
+			return res.status(200).json({ result });
+		} catch (err) {
+			const error = PrismaUtil.handleError(err);
+			logger.error(`TradeService.createTrade failed. Error = ${error.message}`);
+			return res.status(error.code).json({ message: error.message });
+		}
 	}
-});
+);
 
 /* PUT /trade */
 
@@ -87,7 +91,8 @@ router.put(
 
 /* PUT /trade/toggle-active */
 
-router.put("/toggle-active",
+router.put(
+	"/toggle-active",
 	AuthUtil.authenticateToken,
 	body("id").isString().isLength({ min: 36, max: 36 }),
 	async (req, res) => {
@@ -106,6 +111,7 @@ router.put("/toggle-active",
 			logger.error(`TradeService.updateTrade failed. Error = ${error.message}`);
 			return res.status(error.code).json({ message: error.message });
 		}
-	});
+	}
+);
 
 export default router;
