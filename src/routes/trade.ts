@@ -50,10 +50,10 @@ router.post(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { trade } = req.body;
+		const { trade, auth_user_id } = req.body;
 
 		try {
-			const result = await TradeService.createTrade(trade);
+			const result = await TradeService.createTrade(trade, auth_user_id);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);
@@ -76,10 +76,10 @@ router.put(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { trade_id, updates } = req.body;
+		const { trade_id, updates, auth_user_id } = req.body;
 
 		try {
-			const result = await TradeService.updateTrade(trade_id, updates);
+			const result = await TradeService.updateTrade(trade_id, updates, auth_user_id);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);
@@ -101,10 +101,10 @@ router.put(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { trade_id } = req.body;
+		const { trade_id, auth_user_id } = req.body;
 
 		try {
-			const result = await TradeService.toggleActive(trade_id);
+			const result = await TradeService.toggleActive(trade_id, auth_user_id);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);

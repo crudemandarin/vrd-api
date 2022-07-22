@@ -2,6 +2,8 @@ export interface UpdateTradeModel {
 	trade_id?: string;
 	created_by?: string;
 	created_at?: string;
+	updated_by?: string;
+	updated_at?: string;
 	active?: boolean;
 	trade_date?: string;
 	trade_type?: string;

@@ -34,10 +34,10 @@ router.post(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { trades } = req.body;
+		const { trades, auth_user_id } = req.body;
 
 		try {
-			const result = await TradeService.createTrades(trades);
+			const result = await TradeService.createTrades(trades, auth_user_id);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);

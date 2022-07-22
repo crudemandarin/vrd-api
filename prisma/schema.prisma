@@ -35,40 +35,44 @@ model futures {
 }
 
 model trade {
-  trade_id            String    @id(map: "PK__trade__AAFF5BF7AAC42721") @db.VarChar(36)
-  created_by          String    @db.VarChar(36)
-  created_at          DateTime  @default(now(), map: "DF__trade__created_a__5BE2A6F2") @db.DateTime
-  active              Boolean   @default(true, map: "DF__trade__active__5CD6CB2B")
-  trade_date          DateTime  @db.Date
-  trade_type          String    @db.VarChar(16)
-  market              String    @db.VarChar(16)
-  commodity           String    @db.VarChar(16)
-  contract_name       String    @db.VarChar(16)
-  settlement_type     String    @db.VarChar(16)
-  settlement_market   String    @db.VarChar(16)
-  trader_name         String    @db.VarChar(32)
-  counter_party       String?   @db.VarChar(16)
-  other_counter_party String?   @db.VarChar(16)
-  settlement_point    String    @db.VarChar(16)
-  settlement_location String    @db.VarChar(16)
-  book                String?   @db.VarChar(32)
-  transaction         String    @db.VarChar(16)
-  delivery_start      DateTime? @db.Date
-  delivery_end        DateTime? @db.Date
-  expiration          DateTime? @db.Date
-  volume              Float
-  price               Float
-  fee                 Float
-  strike              Float
-  user                user      @relation(fields: [created_by], references: [user_id], onUpdate: NoAction, map: "FK__trade__created_b__5AEE82B9")
+  trade_id                    String    @id(map: "PK__trade__AAFF5BF717D4A4F8") @db.VarChar(36)
+  created_by                  String    @db.VarChar(36)
+  created_at                  DateTime  @default(now(), map: "DF__trade__created_a__6754599E") @db.DateTime
+  updated_by                  String    @db.VarChar(36)
+  updated_at                  DateTime  @default(now(), map: "DF__trade__updated_a__693CA210") @db.DateTime
+  active                      Boolean   @default(true, map: "DF__trade__active__6A30C649")
+  trade_date                  DateTime  @db.Date
+  trade_type                  String    @db.VarChar(16)
+  market                      String    @db.VarChar(16)
+  commodity                   String    @db.VarChar(16)
+  contract_name               String    @db.VarChar(16)
+  settlement_type             String    @db.VarChar(16)
+  settlement_market           String    @db.VarChar(16)
+  trader_name                 String    @db.VarChar(32)
+  counter_party               String?   @db.VarChar(16)
+  other_counter_party         String?   @db.VarChar(16)
+  settlement_point            String    @db.VarChar(16)
+  settlement_location         String    @db.VarChar(16)
+  book                        String?   @db.VarChar(32)
+  transaction                 String    @db.VarChar(16)
+  delivery_start              DateTime? @db.Date
+  delivery_end                DateTime? @db.Date
+  expiration                  DateTime? @db.Date
+  volume                      Float
+  price                       Float
+  fee                         Float
+  strike                      Float
+  user                        user      @relation(fields: [created_by], references: [user_id], onUpdate: NoAction, map: "FK__trade__created_b__66603565")
+  user_trade_updated_byTouser user      @relation("trade_updated_byTouser", fields: [updated_by], references: [user_id], onUpdate: NoAction, map: "FK__trade__updated_b__68487DD7")
 }
 
 model user {
-  user_id       String  @id(map: "PK__user__B9BE370F1F138D5A") @db.VarChar(36)
-  email         String  @unique(map: "AK__email") @db.VarChar(64)
-  password_hash String  @db.VarChar(64)
-  role          String  @db.VarChar(16)
-  first_name    String  @db.VarChar(64)
-  last_name     String? @db.VarChar(64)
-  trade         trade[]
+  user_id                      String  @id(map: "PK__user__B9BE370F1F138D5A") @db.VarChar(36)
+  email                        String  @unique(map: "AK__email") @db.VarChar(64)
+  password_hash                String  @db.VarChar(64)
+  role                         String  @db.VarChar(16)
+  first_name                   String  @db.VarChar(64)
+  last_name                    String? @db.VarChar(64)
+  trade                        trade[]
+  trade_trade_updated_byTouser trade[] @relation("trade_updated_byTouser")
 }
