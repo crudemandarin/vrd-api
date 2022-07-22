@@ -2,9 +2,10 @@ import { Router } from "express";
 import { body, query, validationResult } from "express-validator";
 
 import TradeService from "../services/TradeService";
-import logger from "../utils/logger/logger";
 import PrismaUtil from "../utils/PrismaUtil";
 import AuthUtil from "../utils/AuthUtil";
+import logger from "../utils/logger/logger";
+
 
 const router = Router();
 
@@ -84,18 +85,27 @@ router.put(
 	}
 );
 
-/* PUT /trade/deactivate */
+/* PUT /trade/toggle-active */
 
-router.put("/deactivate", AuthUtil.authenticateToken, async (req, res) => {
-	// try {
-	// 	const result = await TradeService.deactivateTrade();
-	// 	return res.status(200).json({ result });
-	// } catch (err) {
-	// 	logger.error("TradeService.deactivateTrade failed.");
-	// 	logger.error(err);
-	// }
+router.put("/toggle-active",
+	AuthUtil.authenticateToken,
+	body("id").isString().isLength({ min: 36, max: 36 }),
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
 
-	res.status(501).json({ message: "Not Implemented" });
-});
+		const { id } = req.body;
+
+		try {
+			const result = await TradeService.toggleActive(id);
+			return res.status(200).json({ result });
+		} catch (err) {
+			const error = PrismaUtil.handleError(err);
+			logger.error(`TradeService.updateTrade failed. Error = ${error.message}`);
+			return res.status(error.code).json({ message: error.message });
+		}
+	});
 
 export default router;

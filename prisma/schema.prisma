@@ -35,28 +35,32 @@ model futures {
 }
 
 model trade {
-  id                 String    @id(map: "PK__trade__3213E83F98F3A0C9") @db.VarChar(36)
-  date               DateTime  @db.Date
-  type               String    @db.VarChar(16)
-  market             String    @db.VarChar(16)
-  commodity          String    @db.VarChar(16)
-  contractName       String    @db.VarChar(16)
-  settlementType     String    @db.VarChar(16)
-  settlementMarket   String    @db.VarChar(16)
-  traderName         String    @db.VarChar(32)
-  counterParty       String?   @db.VarChar(16)
-  otherCounterParty  String?   @db.VarChar(16)
-  settlementPoint    String    @db.VarChar(16)
-  settlementLocation String    @db.VarChar(16)
-  book               String?   @db.VarChar(32)
-  transaction        String    @db.VarChar(16)
-  deliveryStart      DateTime? @db.Date
-  deliveryEnd        DateTime? @db.Date
-  expiration         DateTime? @db.Date
-  volume             Float
-  price              Float
-  fee                Float
-  strike             Float
+  trade_id            String    @id(map: "PK__trade__AAFF5BF7AAC42721") @db.VarChar(36)
+  created_by          String    @db.VarChar(36)
+  created_at          DateTime  @default(now(), map: "DF__trade__created_a__5BE2A6F2") @db.DateTime
+  active              Boolean   @default(true, map: "DF__trade__active__5CD6CB2B")
+  trade_date          DateTime  @db.Date
+  trade_type          String    @db.VarChar(16)
+  market              String    @db.VarChar(16)
+  commodity           String    @db.VarChar(16)
+  contract_name       String    @db.VarChar(16)
+  settlement_type     String    @db.VarChar(16)
+  settlement_market   String    @db.VarChar(16)
+  trader_name         String    @db.VarChar(32)
+  counter_party       String?   @db.VarChar(16)
+  other_counter_party String?   @db.VarChar(16)
+  settlement_point    String    @db.VarChar(16)
+  settlement_location String    @db.VarChar(16)
+  book                String?   @db.VarChar(32)
+  transaction         String    @db.VarChar(16)
+  delivery_start      DateTime? @db.Date
+  delivery_end        DateTime? @db.Date
+  expiration          DateTime? @db.Date
+  volume              Float
+  price               Float
+  fee                 Float
+  strike              Float
+  user                user      @relation(fields: [created_by], references: [user_id], onUpdate: NoAction, map: "FK__trade__created_b__5AEE82B9")
 }
 
 model user {
@@ -66,4 +70,5 @@ model user {
   role          String  @db.VarChar(16)
   first_name    String  @db.VarChar(64)
   last_name     String? @db.VarChar(64)
+  trade         trade[]
 }

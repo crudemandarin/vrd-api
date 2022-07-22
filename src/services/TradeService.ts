@@ -1,14 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 
-import { TradeModel } from "../models/trade.model";
+import { TradeModel, UpdateTradeModel } from "../models/trade.model";
 import logger from "../utils/logger/logger";
 
 const prisma = new PrismaClient();
 
 class TradeService {
-	static async getTrade(id: string) {
-		logger.info(`TradeService.getTrade invoked! id = "${id}"`);
-		const trade = prisma.trade.findUnique({ where: { id } });
+	static async getTrade(trade_id: string) {
+		logger.info(`TradeService.getTrade invoked! trade_id = "${trade_id}"`);
+		const trade = prisma.trade.findUnique({ where: { trade_id } });
 		return trade;
 	}
 
@@ -24,9 +24,9 @@ class TradeService {
 		);
 
 		const dates = {
-			date: new Date(trade.date),
-			deliveryStart: new Date(trade.deliveryStart),
-			deliveryEnd: new Date(trade.deliveryEnd),
+			trade_date: new Date(trade.trade_date),
+			delivery_start: new Date(trade.delivery_start),
+			delivery_end: new Date(trade.delivery_end),
 			expiration: new Date(trade.expiration),
 		};
 		const format = { ...trade, ...dates };
@@ -47,9 +47,9 @@ class TradeService {
 
 		const format = trades.map((trade) => {
 			const dates = {
-				date: new Date(trade.date),
-				deliveryStart: new Date(trade.deliveryStart),
-				deliveryEnd: new Date(trade.deliveryEnd),
+				trade_date: new Date(trade.trade_date),
+				delivery_start: new Date(trade.delivery_start),
+				delivery_end: new Date(trade.delivery_end),
 				expiration: new Date(trade.expiration),
 			};
 			return { ...trade, ...dates };
@@ -62,24 +62,24 @@ class TradeService {
 		return result;
 	}
 
-	static async updateTrade(id: string, updates: TradeModel) {
+	static async updateTrade(trade_id: string, updates: UpdateTradeModel) {
 		logger.info(
-			`TradeService.updateTrade invoked! id = ${id}, updates = ${JSON.stringify(
+			`TradeService.updateTrade invoked! trade_id = ${trade_id}, updates = ${JSON.stringify(
 				updates
 			)}`
 		);
 
 		const dates = {
-			date: new Date(updates.date),
-			deliveryStart: new Date(updates.deliveryStart),
-			deliveryEnd: new Date(updates.deliveryEnd),
+			trade_date: new Date(updates.trade_date),
+			delivery_start: new Date(updates.delivery_start),
+			delivery_end: new Date(updates.delivery_end),
 			expiration: new Date(updates.expiration),
 		};
 		const format = { ...updates, ...dates };
 
 		const result = await prisma.trade.update({
 			where: {
-				id,
+				trade_id,
 			},
 			data: {
 				...format,
@@ -89,11 +89,13 @@ class TradeService {
 		return result;
 	}
 
-	// static async deactivateTrade(id: string) {
-	// 	logger.info("TradeService.deactivateTrade invoked!");
-	// 	const result = await this.updateTrade(id, {});
-	// 	return result;
-	// }
+	static async toggleActive(trade_id: string) {
+		logger.info("TradeService.deactivateTrade invoked!");
+		const trade = await TradeService.getTrade(trade_id);
+		const updates = { active: !trade.active };
+		const result = await TradeService.updateTrade(trade_id, updates);
+		return result;
+	}
 }
 
 export default TradeService;
