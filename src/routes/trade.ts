@@ -68,7 +68,7 @@ router.post(
 router.put(
 	"/",
 	AuthUtil.authenticateToken,
-	body("id").isString().isLength({ min: 36, max: 36 }),
+	body("trade_id").isString().isLength({ min: 36, max: 36 }),
 	body("updates").exists(),
 	async (req, res) => {
 		const errors = validationResult(req);
@@ -76,10 +76,10 @@ router.put(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { id, updates } = req.body;
+		const { trade_id, updates } = req.body;
 
 		try {
-			const result = await TradeService.updateTrade(id, updates);
+			const result = await TradeService.updateTrade(trade_id, updates);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);
@@ -94,17 +94,17 @@ router.put(
 router.put(
 	"/toggle-active",
 	AuthUtil.authenticateToken,
-	body("id").isString().isLength({ min: 36, max: 36 }),
+	body("trade_id").isString().isLength({ min: 36, max: 36 }),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { id } = req.body;
+		const { trade_id } = req.body;
 
 		try {
-			const result = await TradeService.toggleActive(id);
+			const result = await TradeService.toggleActive(trade_id);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);

@@ -12,7 +12,7 @@ class AuthUtil {
 		secret: string
 	): string {
 		const options = {
-			expiresIn: TOKEN_EXPIRATION, // 5 minutes
+			expiresIn: TOKEN_EXPIRATION,
 			issuer: "vrd-api",
 		};
 		const token = sign(payload, secret, options);
@@ -25,7 +25,7 @@ class AuthUtil {
 		next: NextFunction
 	) {
 		const { authorization } = req.headers;
-		if (!authorization) res.sendStatus(401);
+		if (!authorization) return res.sendStatus(401);
 		const token = authorization.split(" ")[1];
 		if (!token) return res.sendStatus(401);
 

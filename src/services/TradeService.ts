@@ -1,24 +1,24 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, trade } from "@prisma/client";
 
-import { TradeModel, UpdateTradeModel } from "../models/trade.model";
+import { UpdateTradeModel } from "../models/trade.model";
 import logger from "../utils/logger/logger";
-
-const prisma = new PrismaClient();
 
 class TradeService {
 	static async getTrade(trade_id: string) {
 		logger.info(`TradeService.getTrade invoked! trade_id = "${trade_id}"`);
+		const prisma = new PrismaClient();
 		const trade = prisma.trade.findUnique({ where: { trade_id } });
 		return trade;
 	}
 
 	static async getTrades() {
 		logger.info("TradeService.getTrades invoked!");
+		const prisma = new PrismaClient();
 		const trades = prisma.trade.findMany();
 		return trades;
 	}
 
-	static async createTrade(trade: TradeModel) {
+	static async createTrade(trade: trade) {
 		logger.info(
 			`TradeService.createTrade invoked! trade = ${JSON.stringify(trade)}`
 		);
@@ -31,6 +31,7 @@ class TradeService {
 		};
 		const format = { ...trade, ...dates };
 
+		const prisma = new PrismaClient();
 		const result = await prisma.trade.create({
 			data: {
 				...format,
@@ -40,7 +41,7 @@ class TradeService {
 		return result;
 	}
 
-	static async createTrades(trades: TradeModel[]) {
+	static async createTrades(trades: trade[]) {
 		logger.info(
 			`TradeService.createTrades invoked! trades = ${JSON.stringify(trades)}`
 		);
@@ -55,6 +56,7 @@ class TradeService {
 			return { ...trade, ...dates };
 		});
 
+		const prisma = new PrismaClient();
 		const result = await prisma.trade.createMany({
 			data: format,
 		});
@@ -77,6 +79,7 @@ class TradeService {
 		};
 		const format = { ...updates, ...dates };
 
+		const prisma = new PrismaClient();
 		const result = await prisma.trade.update({
 			where: {
 				trade_id,
@@ -90,7 +93,7 @@ class TradeService {
 	}
 
 	static async toggleActive(trade_id: string) {
-		logger.info("TradeService.deactivateTrade invoked!");
+		logger.info("TradeService.toggleActive invoked!");
 		const trade = await TradeService.getTrade(trade_id);
 		const updates = { active: !trade.active };
 		const result = await TradeService.updateTrade(trade_id, updates);

@@ -18,7 +18,7 @@ class AuthService {
 		if (!result) return undefined;
 		const payload = { user_id: user.user_id, role: user.role };
 		const secret = await AuthService.getSecret();
-		const token = await AuthUtil.generateAccessToken(payload, secret);
+		const token = AuthUtil.generateAccessToken(payload, secret);
 		return token;
 	}
 
