@@ -1,15 +1,17 @@
 import { Router } from "express";
+import { body, validationResult } from "express-validator";
 
 import TradeService from "../services/TradeService";
 import PrismaUtil from "../utils/PrismaUtil";
+import AuthUtil from "../utils/AuthUtil";
 import logger from "../utils/logger/logger";
-import { body, validationResult } from "express-validator";
+
 
 const router = Router();
 
 /* GET /trades */
 
-router.get("/", async (_, res) => {
+router.get("/", AuthUtil.authenticateToken, async (_, res) => {
 	try {
 		const trades = await TradeService.getTrades();
 		return res.status(200).json({ trades });
@@ -24,6 +26,7 @@ router.get("/", async (_, res) => {
 
 router.post(
 	"/",
+	AuthUtil.authenticateToken,
 	body("trades").isArray().isLength({ min: 1 }),
 	body("trades.*").isObject(),
 	async (req, res) => {

@@ -58,3 +58,12 @@ model trade {
   fee                Float
   strike             Float
 }
+
+model user {
+  user_id       String  @id(map: "PK__user__B9BE370F1F138D5A") @db.VarChar(36)
+  email         String  @unique(map: "AK__email") @db.VarChar(64)
+  password_hash String  @db.VarChar(64)
+  role          String  @db.VarChar(16)
+  first_name    String  @db.VarChar(64)
+  last_name     String? @db.VarChar(64)
+}

@@ -8,11 +8,15 @@ interface ErrorResult {
 }
 
 class PrismaUtil {
-	static handleError(err: any): ErrorResult {
+	static handleError(err: unknown): ErrorResult {
 		if (err instanceof Prisma.PrismaClientKnownRequestError) {
 			return { code: 400, message: err.message };
 		} else if (err instanceof Prisma.PrismaClientUnknownRequestError) {
 			return { code: 400, message: err.message };
+		} else if (err instanceof Prisma.PrismaClientRustPanicError) {
+			return { code: 500, message: err.message };
+		} else if (err instanceof Prisma.PrismaClientInitializationError) {
+			return { code: 500, message: err.message };
 		} else if (err instanceof Prisma.PrismaClientValidationError) {
 			return { code: 400, message: err.message };
 		}

@@ -4,6 +4,7 @@ import { body, query, validationResult } from "express-validator";
 import TradeService from "../services/TradeService";
 import logger from "../utils/logger/logger";
 import PrismaUtil from "../utils/PrismaUtil";
+import AuthUtil from "../utils/AuthUtil";
 
 const router = Router();
 
@@ -11,6 +12,7 @@ const router = Router();
 
 router.get(
 	"/",
+	AuthUtil.authenticateToken,
 	query("id").isString().isLength({ min: 36, max: 36 }),
 	async (req, res) => {
 		const errors = validationResult(req);
@@ -38,7 +40,7 @@ router.get(
 
 /* POST /trade */
 
-router.post("/", body("trade").exists(), async (req, res) => {
+router.post("/", AuthUtil.authenticateToken, body("trade").exists(), async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(400).json({ errors: errors.array() });
@@ -60,6 +62,7 @@ router.post("/", body("trade").exists(), async (req, res) => {
 
 router.put(
 	"/",
+	AuthUtil.authenticateToken,
 	body("id").isString().isLength({ min: 36, max: 36 }),
 	body("updates").exists(),
 	async (req, res) => {
@@ -83,7 +86,7 @@ router.put(
 
 /* PUT /trade/deactivate */
 
-router.put("/deactivate", async (req, res) => {
+router.put("/deactivate", AuthUtil.authenticateToken, async (req, res) => {
 	// try {
 	// 	const result = await TradeService.deactivateTrade();
 	// 	return res.status(200).json({ result });

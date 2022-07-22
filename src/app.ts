@@ -4,6 +4,7 @@ import cors from "cors";
 import httpLogger from "./utils/logger/http-logger";
 
 import indexRoute from "./routes/index";
+import authRoute from "./routes/auth";
 import tradeRoute from "./routes/trade";
 import tradesRoute from "./routes/trades";
 
@@ -16,6 +17,7 @@ app.use(httpLogger);
 
 // Routes
 app.use("/", indexRoute);
+app.use("/auth", authRoute);
 app.use("/trade", tradeRoute);
 app.use("/trades", tradesRoute);
 
