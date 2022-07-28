@@ -3,3 +3,5 @@ dist
 logs
 src/utils/config.ts
 .env
+
+.DS_STORE
