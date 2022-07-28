@@ -33,8 +33,8 @@ class AuthUtil {
 
 		try {
 			const decoded = verify(token, secret) as TokenPayloadModel;
-			req.body.auth_user_id = decoded.user_id;
-			req.body.auth_role = decoded.role;
+			req.body.auth_user_id = decoded.user.user_id;
+			req.body.auth_role = decoded.user.role;
 		} catch (err) {
 			logger.info(`Token verification failed. Error = ${JSON.stringify(err)}`);
 			return res.sendStatus(401);

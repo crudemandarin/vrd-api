@@ -79,7 +79,11 @@ router.put(
 		const { trade_id, updates, auth_user_id } = req.body;
 
 		try {
-			const result = await TradeService.updateTrade(trade_id, updates, auth_user_id);
+			const result = await TradeService.updateTrade(
+				trade_id,
+				updates,
+				auth_user_id
+			);
 			return res.status(200).json({ result });
 		} catch (err) {
 			const error = PrismaUtil.handleError(err);

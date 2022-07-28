@@ -26,7 +26,7 @@ class TradeService {
 		const audit = {
 			created_by: auth_user_id,
 			updated_by: auth_user_id,
-			active: true
+			active: true,
 		};
 		const dates = {
 			trade_date: new Date(trade.trade_date),
@@ -34,7 +34,7 @@ class TradeService {
 			delivery_end: new Date(trade.delivery_end),
 			expiration: new Date(trade.expiration),
 		};
-		const format = { ...trade, ...audit,  ...dates };
+		const format = { ...trade, ...audit, ...dates };
 
 		const prisma = new PrismaClient();
 		const result = await prisma.trade.create({
@@ -55,7 +55,7 @@ class TradeService {
 			const audit = {
 				created_by: auth_user_id,
 				updated_by: auth_user_id,
-				active: true
+				active: true,
 			};
 			const dates = {
 				trade_date: new Date(trade.trade_date),
@@ -74,7 +74,11 @@ class TradeService {
 		return result;
 	}
 
-	static async updateTrade(trade_id: string, updates: UpdateTradeModel, auth_user_id: string) {
+	static async updateTrade(
+		trade_id: string,
+		updates: UpdateTradeModel,
+		auth_user_id: string
+	) {
 		logger.info(
 			`TradeService.updateTrade invoked! trade_id = ${trade_id}, updates = ${JSON.stringify(
 				updates
@@ -83,7 +87,7 @@ class TradeService {
 
 		const audit = {
 			updated_by: auth_user_id,
-			updated_at: new Date()
+			updated_at: new Date(),
 		};
 		const dates = {
 			trade_date: new Date(updates.trade_date),
@@ -110,7 +114,11 @@ class TradeService {
 		logger.info("TradeService.toggleActive invoked!");
 		const trade = await TradeService.getTrade(trade_id);
 		const updates = { active: !trade.active };
-		const result = await TradeService.updateTrade(trade_id, updates, auth_user_id);
+		const result = await TradeService.updateTrade(
+			trade_id,
+			updates,
+			auth_user_id
+		);
 		return result;
 	}
 }
