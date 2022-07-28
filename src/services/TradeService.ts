@@ -89,12 +89,13 @@ class TradeService {
 			updated_by: auth_user_id,
 			updated_at: new Date(),
 		};
-		const dates = {
-			trade_date: new Date(updates.trade_date),
-			delivery_start: new Date(updates.delivery_start),
-			delivery_end: new Date(updates.delivery_end),
-			expiration: new Date(updates.expiration),
-		};
+
+		const dates: { [key: string]: Date } = {};
+		if ("trade_date" in updates) dates.trade_date = new Date(updates.trade_date);
+		if ("delivery_start" in updates) dates.delivery_start = new Date(updates.delivery_start);
+		if ("delivery_end" in updates) dates.delivery_end = new Date(updates.delivery_end);
+		if ("expiration" in updates) dates.expiration = new Date(updates.expiration);
+
 		const format = { ...updates, ...audit, ...dates };
 
 		const prisma = new PrismaClient();
