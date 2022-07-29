@@ -95,8 +95,8 @@ class TradeService {
 		if ("delivery_start" in updates) dates.delivery_start = new Date(updates.delivery_start);
 		if ("delivery_end" in updates) dates.delivery_end = new Date(updates.delivery_end);
 		if ("expiration" in updates) dates.expiration = new Date(updates.expiration);
-
-		const format = { ...updates, ...audit, ...dates };
+		
+		const format = { ...updates, trade_id, ...audit, ...dates };
 
 		const prisma = new PrismaClient();
 		const result = await prisma.trade.update({
